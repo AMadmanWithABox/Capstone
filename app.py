@@ -1,6 +1,24 @@
+import json
+
+import dash
 from dash import Dash, html, dcc, callback, Input, Output, State
 
-app = Dash(__name__)
+app = Dash(__name__, use_pages=True)
+
+
+def sort_pages(pages):
+    for path in list(pages.mapping):
+        path = str(path)
+        path = path.split(".")
+        sorted_pages = recursive_add_to_sorted_pages(path[1:])
+        return sorted_pages
+
+
+def recursive_add_to_sorted_pages(path, layer):
+    if len(path) == 1:
+        return layer
+
+
 
 app.layout = html.Div(id="default-page", children=[
     html.Div(
@@ -20,9 +38,31 @@ app.layout = html.Div(id="default-page", children=[
         className="sidebar",
         children=[
             html.Div(
-                children=[html.Button(id="toggle-sidebar-btn", className="menu", children="PH", n_clicks=0)]
+                className="sidebar-content",
+                children=[sort_pages(dash.page_registry.values())
+                          ],
+            ),
+            html.Div(
+                className="sidebar-margin",
+                children=[
+                    html.Button(
+                        id="toggle-sidebar-btn",
+                        className="toggle-sidebar-btn",
+                        children=">&#9776;",
+                        n_clicks=0
+                    )
+                ]
             )
-        ])
+        ]),
+    html.Div([
+        html.H1('Multi-page app with Dash Pages'),
+        html.Div([
+            html.Div(
+                dcc.Link(f"{page['name']} - {page['path']}", href=page["relative_path"])
+            ) for page in dash.page_registry.values()
+        ]),
+        dash.page_container
+    ])
 ])
 
 
@@ -32,10 +72,10 @@ app.layout = html.Div(id="default-page", children=[
 )
 def toggle_sidebar(clicks):
     if type(clicks) is None:
-        return "closed"
+        return ">&#9776;"
     if clicks % 2 == 0:
-        return "closed"
-    return "open"
+        return ">&#9776;"
+    return "X"
 
 
 if __name__ == '__main__':
