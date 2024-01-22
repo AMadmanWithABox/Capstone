@@ -1,4 +1,5 @@
 import json
+import pathlib
 
 import dash
 from dash import Dash, html, dcc, callback, Input, Output, State
@@ -6,18 +7,16 @@ from dash import Dash, html, dcc, callback, Input, Output, State
 app = Dash(__name__, use_pages=True)
 
 
-def sort_pages(pages):
-    for path in list(pages.mapping):
-        path = str(path)
-        path = path.split(".")
-        sorted_pages = recursive_add_to_sorted_pages(path[1:])
-        return sorted_pages
+# def sort_pages(pages):
+    # for path in list(pages.mapping):
+    #     path = str(path)
+    #     path = path.split(".")
+    #     print(path)
+    #     sorted_pages = {
+    #         "pages": {}
+    #     }
 
-
-def recursive_add_to_sorted_pages(path, layer):
-    if len(path) == 1:
-        return layer
-
+        # return sorted_pages
 
 
 app.layout = html.Div(id="default-page", children=[
@@ -39,8 +38,7 @@ app.layout = html.Div(id="default-page", children=[
         children=[
             html.Div(
                 className="sidebar-content",
-                children=[sort_pages(dash.page_registry.values())
-                          ],
+                children=[],
             ),
             html.Div(
                 className="sidebar-margin",
