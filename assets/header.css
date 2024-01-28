@@ -3,7 +3,7 @@
     padding-right: 20px;
 }
 .app-header {
-    position: fixed;
+    position: sticky;
     height: 50px;
     display: flex;
     line-height: 0;
