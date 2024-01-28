@@ -1,10 +1,12 @@
 import json
 import pathlib
-
+from lib.templates.side_bar import sidebar
 import dash
 from dash import Dash, html, dcc, callback, Input, Output, State
+import dash_bootstrap_components as dbc
 
-app = Dash(__name__, use_pages=True)
+app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
+
 
 
 # def sort_pages(pages):
@@ -33,47 +35,23 @@ app.layout = html.Div(id="default-page", children=[
             )
         ]),
     html.Div(
-        id="sidebar",
-        className="sidebar",
-        children=[
-            html.Div(
-                className="sidebar-content",
-                children=[],
-            ),
-            html.Div(
-                className="sidebar-margin",
-                children=[
-                    html.Button(
-                        id="toggle-sidebar-btn",
-                        className="toggle-sidebar-btn",
-                        children=">&#9776;",
-                        n_clicks=0
-                    )
-                ]
-            )
-        ]),
-    html.Div([
-        html.H1('Multi-page app with Dash Pages'),
-        html.Div([
-            html.Div(
-                dcc.Link(f"{page['name']} - {page['path']}", href=page["relative_path"])
-            ) for page in dash.page_registry.values()
-        ]),
-        dash.page_container
-    ])
+        # id="sidebar",
+        # className="sidebar",
+        children=[sidebar(dash.page_registry.values())]
+    ),
 ])
 
 
-@callback(
-    Output('toggle-sidebar-btn', 'children'),
-    Input('toggle-sidebar-btn', 'n_clicks')
-)
-def toggle_sidebar(clicks):
-    if type(clicks) is None:
-        return ">&#9776;"
-    if clicks % 2 == 0:
-        return ">&#9776;"
-    return "X"
+# @callback(
+#     Output('toggle-sidebar-btn', 'children'),
+#     Input('toggle-sidebar-btn', 'n_clicks')
+# )
+# def toggle_sidebar(clicks):
+#     if type(clicks) is None:
+#         return ">&#9776;"
+#     if clicks % 2 == 0:
+#         return ">&#9776;"
+#     return "X"
 
 
 if __name__ == '__main__':
