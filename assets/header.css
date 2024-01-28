@@ -25,3 +25,8 @@
     text-decoration: none;
 
 }
+
+.default-page {
+    height: 100%;
+    background: blanchedalmond;
+}

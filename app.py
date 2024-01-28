@@ -1,14 +1,11 @@
-import json
-import pathlib
 from lib.templates.side_bar import sidebar
 import dash
-from dash import Dash, html, dcc, callback, Input, Output, State
+from dash import Dash, html, dcc
+import dash_mantine_components as dmc
 import dash_bootstrap_components as dbc
+app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.MINTY])
 
-app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
-
-
-app.layout = html.Div(id="default-page", children=[
+app.layout = html.Div(className="default-page", children=[
     html.Div(
         className="header",
         children=[
@@ -22,24 +19,13 @@ app.layout = html.Div(id="default-page", children=[
             )
         ]),
     html.Div(
-        # id="sidebar",
-        # className="sidebar",
-        children=[sidebar()]
+        className="main-content",
+        children=[
+            sidebar(),
+            dash.page_container
+        ]
     ),
 ])
-
-
-# @callback(
-#     Output('toggle-sidebar-btn', 'children'),
-#     Input('toggle-sidebar-btn', 'n_clicks')
-# )
-# def toggle_sidebar(clicks):
-#     if type(clicks) is None:
-#         return ">&#9776;"
-#     if clicks % 2 == 0:
-#         return ">&#9776;"
-#     return "X"
-
 
 if __name__ == '__main__':
     app.run(debug=True)
