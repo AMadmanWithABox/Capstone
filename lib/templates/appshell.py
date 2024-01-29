@@ -23,6 +23,23 @@ def create_home_link(label):
     )
 
 
+def create_header_link(icon, href, size=22, color="indigo"):
+    return dmc.Anchor(
+        dmc.ThemeIcon(
+            DashIconify(
+                icon=icon,
+                width=size,
+            ),
+            variant="outline",
+            radius=30,
+            size=36,
+            color=color,
+        ),
+        href=href,
+        target="_blank",
+    )
+
+
 def create_header():
     return dmc.Header(
         height=70,
@@ -90,6 +107,10 @@ def create_header():
                                 align="center",
                                 style={"width": "100%"},
                                 children=[
+                                    create_header_link(
+                                        "radix-icons:github-logo",
+                                        "https://github.com/AMadmanWithABox/Capstone",
+                                    ),
                                 ]),
                             pt="12"
                         ),
