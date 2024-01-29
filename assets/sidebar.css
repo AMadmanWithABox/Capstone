@@ -1,7 +1,3 @@
-/*.sidebar-content {*/
-/*  left: 0;*/
-/*  bottom: 0;*/
-/*  height: 100%;*/
-/*  width: 16rem;*/
-/*  background-color: #f8f9fa;*/
-/*}*/
+.mantine-Drawer-drawer {
+    padding-top: 90px;
+}

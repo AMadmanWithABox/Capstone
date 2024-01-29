@@ -1,20 +1,18 @@
-from lib.templates.appshell import sidebar, create_header
+from lib.templates.appshell import create_sidebar, create_header, create_appshell
 import dash
 from dash import Dash, html, dcc
 import dash_mantine_components as dmc
 import dash_bootstrap_components as dbc
 
-app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash(
+    __name__,
+    use_pages=True,
+    suppress_callback_exceptions=True,
+    update_title=None,
+)
 
-app.layout = html.Div(className="default-page", children=[
-    html.Div(
-        children=[create_header()]),
-    html.Div(
-        children=[
-            dash.page_container
-        ]
-    ),
-])
+app.layout = create_appshell()
+server = app.server
 
 if __name__ == '__main__':
     app.run(debug=True)

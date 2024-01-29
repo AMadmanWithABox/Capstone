@@ -1,5 +1,5 @@
 import dash
-from dash import html, Output, Input, callback
+from dash import html, Output, Input, callback, page_container, dcc
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
 
@@ -18,6 +18,8 @@ def create_home_link(label):
         label,
         href="/",
         underline=False,
+        className="link",
+        inherit=True
     )
 
 
@@ -31,37 +33,63 @@ def create_header():
                 justify="center",
                 style={"height": 70},
                 children=dmc.Grid(
+                    align="center",
                     children=[
                         dmc.Col(
                             span="auto",
                             display="flex",
                             children=[
-                                dmc.Title(
-                                    create_home_link('VisuCalc'),
-                                    order=1,
-                                    inline=1
-                                )
+                                dmc.Group(
+                                    align="center",
+                                    style={"width": "100%"},
+                                    children=[
+                                        dmc.Burger(opened=False, id="burger-button", style={"z-index": 900000}),
+                                        dmc.Title(
+                                            children=[
+                                                dmc.MediaQuery(
+                                                    create_home_link('VisuCalc'),
+                                                    smallerThan="lg",
+                                                    styles={"display": "none"},
+                                                ),
+                                                dmc.MediaQuery(
+                                                    create_home_link('VC'),
+                                                    largerThan="lg",
+                                                    styles={"display": "none"},
+                                                )
+                                            ],
+                                            order=1,
+                                            weight=100,
+                                            inline=1,
+                                            align='center'
+                                        )
+                                    ]),
                             ],
                             pt=12
                         ),
                         dmc.Col(
                             span="auto",
-                            display="flex",
+                            display="center",
                             children=[
                                 dmc.Title(
                                     children='Home',
                                     order=1,
-                                    align='center'
+                                    inline=1,
+                                    align='center',
+                                    weight=400,
+                                    style={"width": "100%", "text-align": "center"}
                                 ),
-                            ]
+                            ],
+                            pt=12
                         ),
                         dmc.Col(
                             span="auto",
+                            display="center",
+                            style={"width": "100%"},
                             children=dmc.Group(
                                 position="right",
-                                spacing="xl",
+                                align="center",
+                                style={"width": "100%"},
                                 children=[
-                                    sidebar(),
                                 ]),
                             pt="12"
                         ),
@@ -72,7 +100,7 @@ def create_header():
     )
 
 
-def sidebar():
+def create_sidebar():
     pages = dash.page_registry.values()
     level_1_tags = list()
     level_2_tags = list()
@@ -83,24 +111,18 @@ def sidebar():
         if len(page_lst) > 2 and page_lst[2] not in level_2_tags:
             level_2_tags.append(page_lst[2])
 
-    return html.Div(children=[html.Div(
-        dmc.ActionIcon(
-            DashIconify(
-                icon="charm:menu-hamburger",
-                width=30
-            ),
-            id="burger-button",
-            size="lg",
-            className="burger-button",
-            mr="10px",
-            mt="10px",
-            variant="filled",
-        )
-    ),
-        dmc.Drawer(
-            id="sidebar-drawer",
-            children=[
-                dmc.NavLink(label="Home", href="/", icon=DashIconify(icon="bi:house-door-fill"))].__add__([
+    return html.Div(
+        children=[
+            dmc.Drawer(
+                size=300,
+                withCloseButton=False,
+                closeOnClickOutside=False,
+                closeOnEscape=False,
+                id="sidebar-drawer",
+                withOverlay=False,
+                children=[
+                    dmc.NavLink(label="Home", href="/", icon=DashIconify(icon="bi:house-door-fill"))
+                ].__add__([
                     dmc.NavLink(
                         label=dash.page_registry.get(f"pages.{sub1}.{sub1}-home").get('name'),
                         href=f"/{sub1}",
@@ -122,16 +144,36 @@ def sidebar():
                         ])
                     for sub1 in level_1_tags
                     if sub1 != ""
-
                 ])
-        ),
-    ])
+            ),
+        ])
+
+
+def create_appshell():
+    return dmc.MantineProvider(
+        dmc.MantineProvider(
+            inherit=True,
+            children=[
+                dmc.NotificationsProvider(
+                    [
+                        create_header(),
+                        create_sidebar(),
+                        html.Div(
+                            dmc.Container(size="lg", pt=90, children=page_container, style={"background-color": "red"}),
+                            id="wrapper",
+                        ),
+                    ]
+                )
+            ]
+        )
+    )
 
 
 @callback(
     Output("sidebar-drawer", "opened"),
-    Input("burger-button", "n_clicks"),
+    Input("burger-button", "opened"),
     config_prevent_initial_callbacks=True,
 )
-def open(n_clicks):
-    return True
+def open_sb(opened):
+    return opened
+
