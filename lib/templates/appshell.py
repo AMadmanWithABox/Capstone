@@ -33,14 +33,27 @@ def create_header():
                 children=dmc.Grid(
                     children=[
                         dmc.Col(
+                            span="auto",
                             display="flex",
                             children=[
-                                html.H1(
-                                    create_home_link('VisuCalc')
+                                dmc.Title(
+                                    create_home_link('VisuCalc'),
+                                    order=1,
+                                    inline=1
                                 )
                             ],
-                            span="content",
                             pt=12
+                        ),
+                        dmc.Col(
+                            span="auto",
+                            display="flex",
+                            children=[
+                                dmc.Title(
+                                    children='Home',
+                                    order=1,
+                                    align='center'
+                                ),
+                            ]
                         ),
                         dmc.Col(
                             span="auto",
@@ -48,11 +61,9 @@ def create_header():
                                 position="right",
                                 spacing="xl",
                                 children=[
-                                    html.H1(
-                                        children='Home',
-                                    ),
                                     sidebar(),
-                                ])
+                                ]),
+                            pt="12"
                         ),
                     ]
                 )
@@ -90,30 +101,30 @@ def sidebar():
             id="sidebar-drawer",
             children=[
                 dmc.NavLink(label="Home", href="/", icon=DashIconify(icon="bi:house-door-fill"))].__add__([
-                dmc.NavLink(
-                    label=dash.page_registry.get(f"pages.{sub1}.{sub1}-home").get('name'),
-                    href=f"/{sub1}",
-                    children=[
-                        dmc.NavLink(
-                            label=dash.page_registry.get(f"pages.{sub1}.{sub2}.{sub2}-home").get('name'),
-                            href=f"/{sub1}/{sub2}",
-                            children=[
-                                dmc.NavLink(
-                                    label=page["name"],
-                                    href=page["path"],
-                                    active="exact"
-                                )
-                                for page in pages
-                                if
-                                page["path"].startswith(f"/{sub1}/{sub2}") and page["path"] != f"/{sub1}/{sub2}"
-                            ])
-                        for sub2 in level_2_tags
-                    ])
-                for sub1 in level_1_tags
-                if sub1 != ""
+                    dmc.NavLink(
+                        label=dash.page_registry.get(f"pages.{sub1}.{sub1}-home").get('name'),
+                        href=f"/{sub1}",
+                        children=[
+                            dmc.NavLink(
+                                label=dash.page_registry.get(f"pages.{sub1}.{sub2}.{sub2}-home").get('name'),
+                                href=f"/{sub1}/{sub2}",
+                                children=[
+                                    dmc.NavLink(
+                                        label=page["name"],
+                                        href=page["path"],
+                                        active="exact"
+                                    )
+                                    for page in pages
+                                    if
+                                    page["path"].startswith(f"/{sub1}/{sub2}") and page["path"] != f"/{sub1}/{sub2}"
+                                ])
+                            for sub2 in level_2_tags
+                        ])
+                    for sub1 in level_1_tags
+                    if sub1 != ""
 
-            ])),
-
+                ])
+        ),
     ])
 
 
