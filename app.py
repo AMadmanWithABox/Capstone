@@ -1,27 +1,16 @@
-from lib.templates.side_bar import sidebar
+from lib.templates.appshell import sidebar, create_header
 import dash
 from dash import Dash, html, dcc
 import dash_mantine_components as dmc
 import dash_bootstrap_components as dbc
-app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.MINTY])
+
+app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 app.layout = html.Div(className="default-page", children=[
     html.Div(
-        className="header",
-        children=[
-            html.Div(
-                className="app-header",
-                children=[
-                    html.H1(children=dcc.Link('VisuCalc', href='/', className="app-header--name")),
-                    html.H1(id="page-title", children='Home', className="app-header--title"),
-                    html.Div(id="empty")
-                ]
-            )
-        ]),
+        children=[create_header()]),
     html.Div(
-        className="main-content",
         children=[
-            sidebar(),
             dash.page_container
         ]
     ),

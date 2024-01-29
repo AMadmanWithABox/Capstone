@@ -1,32 +1,3 @@
-#empty {
-    width: 112px;
-    padding-right: 20px;
-}
-.app-header {
-    position: sticky;
-    height: 50px;
-    display: flex;
-    line-height: 0;
-    align-items: baseline;
-    justify-content: space-between;
-    border-bottom: thin lightgrey solid;
-    width: 100%;
-}
+.site-name{
 
-.app-header .app-header--title {
-    font-size: 22px;
-    text-align: center;
-}
-
-.app-header .app-header--name {
-    font-size: 22px;
-    color: black;
-    padding-left: 20px;
-    text-decoration: none;
-
-}
-
-.default-page {
-    height: 100%;
-    background: blanchedalmond;
 }
