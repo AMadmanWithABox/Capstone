@@ -180,13 +180,16 @@ def create_appshell():
                         create_header(),
                         create_sidebar(),
                         html.Div(
-                            dmc.Container(size="lg", pt=90, children=page_container, style={"background-color": "red"}),
+                            dmc.Container(size="80%", pt=90, children=page_container),
                             id="wrapper",
                         ),
                     ]
                 )
             ]
-        )
+        ),
+        theme={"colorScheme": "dark"},
+        withGlobalStyles=True,
+        withNormalizeCSS=True,
     )
 
 
