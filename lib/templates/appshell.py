@@ -46,6 +46,7 @@ def create_header():
         fixed=True,
         px=25,
         children=[
+            dcc.Location(id="current-location", refresh=True),
             dmc.Stack(
                 justify="center",
                 style={"height": 70},
@@ -88,7 +89,8 @@ def create_header():
                             display="center",
                             children=[
                                 dmc.Title(
-                                    children='Home',
+                                    id="header-page-name",
+                                    children="",
                                     order=1,
                                     inline=1,
                                     align='center',
@@ -192,6 +194,16 @@ def create_appshell():
         withNormalizeCSS=True,
     )
 
+@callback(
+    Output("header-page-name", "children"),
+    Input("url", "pathname"),
+)
+def update_header(pathname):
+    pages = dash.page_registry.values()
+    for page in pages:
+        if page["path"] == pathname:
+            return page["name"]
+    return "404"
 
 @callback(
     Output("sidebar-drawer", "opened"),
