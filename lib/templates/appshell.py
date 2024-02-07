@@ -40,86 +40,95 @@ def create_header_link(icon, href, size=22, color="indigo"):
     )
 
 
+def create_header_grid_group_content():
+    return [
+        dmc.Burger(opened=False, id="burger-button", style={"z-index": 900000}),
+        dmc.Title(
+            children=[
+                dmc.MediaQuery(
+                    create_home_link('VisuCalc'),
+                    smallerThan="lg",
+                    styles={"display": "none"},
+                ),
+                dmc.MediaQuery(
+                    create_home_link('VC'),
+                    largerThan="lg",
+                    styles={"display": "none"},
+                )
+            ],
+            order=1,
+            weight=100,
+            inline=1,
+            align='center'
+        )]
+
+
+def create_header_grid_content():
+    return [
+        dmc.Col(
+            span="auto",
+            display="flex",
+            children=[
+                dmc.Group(
+                    align="center",
+                    style={"width": "100%"},
+                    children=create_header_grid_group_content()),
+            ],
+            pt=12
+        ),
+        dmc.Col(
+            span="auto",
+            display="center",
+            children=[
+                dmc.Title(
+                    id="header-page-name",
+                    children="",
+                    order=1,
+                    inline=1,
+                    align='center',
+                    weight=400,
+                    style={"width": "100%", "text-align": "center"}
+                ),
+            ],
+            pt=12
+        ),
+        dmc.Col(
+            span="auto",
+            display="center",
+            style={"width": "100%"},
+            children=dmc.Group(
+                position="right",
+                align="center",
+                style={"width": "100%"},
+                children=[
+                    create_header_link(
+                        "radix-icons:github-logo",
+                        "https://github.com/AMadmanWithABox/Capstone",
+                    ),
+                ]),
+            pt="12"
+        )]
+
+
+def create_header_content():
+    return [
+        dcc.Location(id="current-location", refresh=True),
+        dmc.Stack(
+            justify="center",
+            style={"height": 70},
+            children=dmc.Grid(
+                align="center",
+                children=create_header_grid_content()
+            )
+        )]
+
+
 def create_header():
     return dmc.Header(
         height=70,
         fixed=True,
         px=25,
-        children=[
-            dcc.Location(id="current-location", refresh=True),
-            dmc.Stack(
-                justify="center",
-                style={"height": 70},
-                children=dmc.Grid(
-                    align="center",
-                    children=[
-                        dmc.Col(
-                            span="auto",
-                            display="flex",
-                            children=[
-                                dmc.Group(
-                                    align="center",
-                                    style={"width": "100%"},
-                                    children=[
-                                        dmc.Burger(opened=False, id="burger-button", style={"z-index": 900000}),
-                                        dmc.Title(
-                                            children=[
-                                                dmc.MediaQuery(
-                                                    create_home_link('VisuCalc'),
-                                                    smallerThan="lg",
-                                                    styles={"display": "none"},
-                                                ),
-                                                dmc.MediaQuery(
-                                                    create_home_link('VC'),
-                                                    largerThan="lg",
-                                                    styles={"display": "none"},
-                                                )
-                                            ],
-                                            order=1,
-                                            weight=100,
-                                            inline=1,
-                                            align='center'
-                                        )
-                                    ]),
-                            ],
-                            pt=12
-                        ),
-                        dmc.Col(
-                            span="auto",
-                            display="center",
-                            children=[
-                                dmc.Title(
-                                    id="header-page-name",
-                                    children="",
-                                    order=1,
-                                    inline=1,
-                                    align='center',
-                                    weight=400,
-                                    style={"width": "100%", "text-align": "center"}
-                                ),
-                            ],
-                            pt=12
-                        ),
-                        dmc.Col(
-                            span="auto",
-                            display="center",
-                            style={"width": "100%"},
-                            children=dmc.Group(
-                                position="right",
-                                align="center",
-                                style={"width": "100%"},
-                                children=[
-                                    create_header_link(
-                                        "radix-icons:github-logo",
-                                        "https://github.com/AMadmanWithABox/Capstone",
-                                    ),
-                                ]),
-                            pt="12"
-                        ),
-                    ]
-                )
-            )
-        ]
+        children=create_header_content()
     )
 
 
@@ -147,11 +156,11 @@ def create_sidebar():
                     dmc.NavLink(label="Home", href="/", icon=DashIconify(icon="bi:house-door-fill"))
                 ].__add__([
                     dmc.NavLink(
-                        label=dash.page_registry.get(f"pages.{sub1}.{sub1}-home").get('name'),
+                        label=dash.page_registry.get(f'pages.{sub1}.{sub1}_home').get('name'),
                         href=f"/{sub1}",
                         children=[
                             dmc.NavLink(
-                                label=dash.page_registry.get(f"pages.{sub1}.{sub2}.{sub2}-home").get('name'),
+                                label=dash.page_registry[f'pages.{sub1}.{sub2}.{sub2}_home'].get('name'),
                                 href=f"/{sub1}/{sub2}",
                                 children=[
                                     dmc.NavLink(
@@ -228,6 +237,7 @@ def create_appshell():
         withNormalizeCSS=True,
     )
 
+
 @callback(
     Output("header-page-name", "children"),
     Input("url", "pathname"),
@@ -238,6 +248,7 @@ def update_header(pathname):
         if page["path"] == pathname:
             return page["name"]
     return "404"
+
 
 @callback(
     Output("sidebar-drawer", "opened"),
