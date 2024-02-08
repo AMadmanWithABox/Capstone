@@ -13,17 +13,14 @@ def create_page():
 
     expr = 1/x
 
-    f = lambdify(x, expr, 'numpy')
+    f = lambdify(x, expr)
     x_scale = 100
     domain = np.arange(-x_scale, x_scale, 0.1)
     y = f(domain)
     ha = find_horizontal_asymptote(expr, [x])
     print(ha)
 
-    return create_basic_graph(-10, 10, -10, 10, 'Epsilon-delta limits', 'x', 'f(x)', {
-        'x': domain,
-        'f(x)': y,
-    }, details='Under construction...')
+    return create_basic_graph(x, y, "Epsilon-delta limits")
 
 
 layout = html.Div([
