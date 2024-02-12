@@ -1,9 +1,10 @@
+import warnings
+
 from lib.templates.appshell import create_sidebar, create_header, create_appshell
 import dash
 from dash import Dash, html, dcc
 import dash_mantine_components as dmc
 import dash_bootstrap_components as dbc
-
 
 app = Dash(
     __name__,
