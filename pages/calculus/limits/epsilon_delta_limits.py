@@ -1,9 +1,5 @@
-import decimal
-
 import dash
 from sympy import *
-from lib.math_tools.functional import find_horizontal_asymptote
-import numpy as np
 from dash import html, dcc
 from lib.templates.basic_graph_component import create_basic_graph
 
@@ -87,9 +83,6 @@ def create_page():
         "log(sin(x))",
         "log(cos(x))",
         "log(tan(x))",
-        "sin(exp(x))",
-        "cos(exp(x))",
-        "tan(exp(x))",
         "sin(log(x))",
         "cos(log(x))",
         "tan(log(x))",

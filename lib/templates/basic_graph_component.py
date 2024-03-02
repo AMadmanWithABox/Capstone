@@ -11,7 +11,8 @@ from lib.constants import ROUNDING
 def create_graph(x_range: int, expr_str, x_min=None, x_max=None, y_min=None, y_max=None, title=None):
     warnings.filterwarnings("error")
     fig = go.Figure()
-    x = symbols('x')
+    x = symbols('x', real=True)
+    x_not_real = symbols('x')
     expr = sympify(expr_str)
     print(f'function {expr_str} is {type(expr)}')
     f = lambdify(x, expr, modules=['numpy'])
@@ -19,7 +20,6 @@ def create_graph(x_range: int, expr_str, x_min=None, x_max=None, y_min=None, y_m
     va = find_vertical_asymptote(expr, [x], x_range)
     domain = np.arange(-x_range, x_range, float(1)/10**ROUNDING)
     domain = domain.round(ROUNDING)
-
     oa = find_oblique_asymptote(expr)
     holes = find_holes(expr)
 
@@ -58,9 +58,9 @@ def create_graph(x_range: int, expr_str, x_min=None, x_max=None, y_min=None, y_m
                 xref="x",
                 yref="y",
                 x0=h - (float(1) / 10**ROUNDING),
-                y0=-(float(1) / 10**ROUNDING),
+                y0=int(limit(expr, x_not_real, h, dir="+-")) - (float(1) / 10**ROUNDING),
                 x1=h + (float(1) / 10**ROUNDING),
-                y1=(float(1) / 10**ROUNDING),
+                y1=int(limit(expr, x_not_real, h, dir="+-")) + (float(1) / 10**ROUNDING),
                 line_color="red",
                 label={'text':f'Hole at x={h}'}
             )

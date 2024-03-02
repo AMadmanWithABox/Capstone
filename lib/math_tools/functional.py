@@ -1,5 +1,10 @@
+import warnings
+
+import sympy
 from sympy import *
+from sympy.calculus.util import continuous_domain
 from sympy.core.numbers import One
+from sympy.abc import x, y
 
 from lib.constants import ROUNDING
 
@@ -7,7 +12,9 @@ from lib.constants import ROUNDING
 # Check for horizontal asymptote: if (lim as x -> infinity) and (lim as x -> -infinity) == the same number
 def find_horizontal_asymptote(expr, func_symbols):
     if isinstance(expr, exp) and isinstance(expr.args[0], Symbol):
-        return [int(limit(expr, func_symbols[0], -oo))]
+        if len(expr.args) > 1:
+            return limit(expr, func_symbols[0], -oo)
+        return [0]
     if isinstance(expr, Pow) and isinstance(expr.args[1], Symbol):
         f = lambdify(func_symbols[0], expr, modules=['numpy'])
         return [int(f(-10000)) if int(f(-10000)) == int(f(-10001)) else int(f(10000))]
@@ -24,6 +31,25 @@ def find_horizontal_asymptote(expr, func_symbols):
     except:
         return list()
 
+def trig_solver(expr, x_range):
+    solve_set = list()
+    current = -x_range
+    if isinstance(expr.args[0], log):
+        current = 0
+    while current < x_range:
+        try:
+            current = nsolve(expr, (current, current + 1), solver='bisect', rational=False)
+            print(f'Current: {current}')
+            solve_set.append(current)
+            current += 0.001
+        except ValueError as e:
+            print('hit ValueError')
+            current += 1
+            pass
+        except TypeError as e:
+            pass
+    return solve_set
+
 
 def find_vertical_asymptote(expr, func_symbols, x_range):
     if isinstance(expr, Number):
@@ -33,9 +59,16 @@ def find_vertical_asymptote(expr, func_symbols, x_range):
     denominator = denom(expr)
     for s in func_symbols:
         if not isinstance(denominator, One) and not isinstance(numerator, log):
-            va = list(solve(denominator, s))
+            if isinstance(denominator, sin) or isinstance(denominator, cos) or isinstance(denominator, tan):
+                va = trig_solver(denominator, x_range)
+            else:
+                va = list(solve(denominator, s))
         elif isinstance(expr, tan):
-            va = list([round(pi / 2 + (pi * n), ROUNDING) for n in range(-x_range, x_range)])
+            inside = expr.args[0]
+            print("in tan VA")
+            print(inside)
+            solve_set = trig_solver(cos(inside), x_range)
+            va = list([round(n, ROUNDING) for n in solve_set])
         elif isinstance(expr, cot):
             va = list([round(pi * n, ROUNDING) for n in range(-x_range, x_range)])
         elif isinstance(expr, sec):
@@ -104,8 +137,8 @@ def find_holes(expr):
     denominator = denom(expr)
     if isinstance(numerator, One) or isinstance(denominator, One):
         return
-    print(f'Numerator {numerator} is of type {type(numerator)}')
-    print(f'Denominator {denominator} is of type {type(denominator)}')
+    # print(f'Numerator {numerator} is of type {type(numerator)}')
+    # print(f'Denominator {denominator} is of type {type(denominator)}')
     if isinstance(denominator, Symbol):
         return [0]
     numerator = factor_list(numerator)
