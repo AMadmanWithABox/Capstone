@@ -141,4 +141,4 @@ def create_graph(x_range: int, expr_str, x_min=None, x_max=None, y_min=None, y_m
 
 def create_basic_graph(x_range, expr, x_min=None, x_max=None, y_min=None, y_max=None, title=None):
     graph = create_graph(x_range, expr, x_min, x_max, y_min, y_max, title)
-    return dmc.Card(dcc.Graph(figure=graph, mathjax=True))
+    return dmc.Card(dcc.Graph(figure=graph, mathjax=True), shadow="sm")
