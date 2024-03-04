@@ -10,26 +10,38 @@ from lib.constants import ROUNDING
 
 
 # Check for horizontal asymptote: if (lim as x -> infinity) and (lim as x -> -infinity) == the same number
-def find_horizontal_asymptote(expr, func_symbols):
-    if isinstance(expr, exp) and isinstance(expr.args[0], Symbol):
-        if len(expr.args) > 1:
-            return limit(expr, func_symbols[0], -oo)
-        return [0]
-    if isinstance(expr, Pow) and isinstance(expr.args[1], Symbol):
-        f = lambdify(func_symbols[0], expr, modules=['numpy'])
-        return [int(f(-10000)) if int(f(-10000)) == int(f(-10001)) else int(f(10000))]
+def find_horizontal_asymptote(expr, func_symbols, x_range):
     try:
+        inverse_expr = solve(Eq(y, expr), x)
+        print(f'Inverse expression: {inverse_expr}')
         ha = list()
-        for symbol in func_symbols:
-            if (limit(expr, symbol, oo) == limit(expr, symbol, -oo)
-                    and limit(expr, symbol, oo) != oo
-                    and limit(expr, symbol, oo) != -oo
-                    and not isinstance(limit(expr, symbol, oo), AccumBounds)
-            ):
-                ha.append(int(limit(expr, symbol, oo)))
+        for expression in inverse_expr:
+            try:
+                ha.extend(find_vertical_asymptote(expression, y, x_range))
+            except:
+                pass
+        print(f'Horizontal asymptotes: {ha}')
         return ha
     except:
-        return list()
+        if isinstance(expr, exp) and isinstance(expr.args[0], Symbol):
+            if len(expr.args) > 1:
+                return limit(expr, func_symbols[0], -oo)
+            return [0]
+        if isinstance(expr, Pow) and isinstance(expr.args[1], Symbol):
+            f = lambdify(func_symbols[0], expr, modules=['numpy'])
+            return [int(f(-10000)) if int(f(-10000)) == int(f(-10001)) else int(f(10000))]
+        try:
+            ha = list()
+            for symbol in func_symbols:
+                if (limit(expr, symbol, oo) == limit(expr, symbol, -oo)
+                        and limit(expr, symbol, oo) != oo
+                        and limit(expr, symbol, oo) != -oo
+                        and not isinstance(limit(expr, symbol, oo), AccumBounds)
+                ):
+                    ha.append(int(limit(expr, symbol, oo)))
+            return ha
+        except:
+            return list()
 
 
 # def window_solver(expr, x_range):
@@ -50,10 +62,9 @@ def find_horizontal_asymptote(expr, func_symbols):
 #     return solve_set
 
 
-def singularity_finder(expr, x_range):
+def singularity_finder(expr, func_symbol, x_range):
     solve_set = list()
-    solve_set_unfiltered = singularities(expr, x, Interval(-x_range, x_range, ))
-    print(solve_set_unfiltered)
+    solve_set_unfiltered = singularities(expr, func_symbol, Interval(-x_range, x_range, ))
     if solve_set_unfiltered is EmptySet:
         return solve_set
 
@@ -64,12 +75,11 @@ def singularity_finder(expr, x_range):
             break
         else:
             solve_set.append(nfloat(s))
-    print(solve_set)
     return solve_set
 
 
-def find_vertical_asymptote(expr, func_symbols, x_range):
-    va = singularity_finder(expr, x_range)
+def find_vertical_asymptote(expr, func_symbol, x_range):
+    va = singularity_finder(expr, func_symbol, x_range)
     # if isinstance(expr, Number):
     #     return list()
     # va = list()

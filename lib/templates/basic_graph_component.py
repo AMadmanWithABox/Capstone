@@ -1,7 +1,6 @@
-import warnings
 import numpy as np
-from sympy import *
 from dash import dcc
+from sympy import abc
 import dash_mantine_components as dmc
 import plotly.graph_objects as go
 from lib.math_tools.functional import *
@@ -9,10 +8,8 @@ from lib.constants import ROUNDING
 
 
 def create_graph(x_range: int, expr_str, x_min=None, x_max=None, y_min=None, y_max=None, title=None, is_derivative=False):
-
     warnings.filterwarnings("error")
     fig = go.Figure()
-    x = symbols('x', real=True)
     x_not_real = symbols('x')
     expr = sympify(expr_str)
     # deriv = None
@@ -23,8 +20,8 @@ def create_graph(x_range: int, expr_str, x_min=None, x_max=None, y_min=None, y_m
     #         pass
     print(f'function {expr_str} is {type(expr)} {expr}')
     f = lambdify(x, expr, modules=['numpy'])
-    ha = find_horizontal_asymptote(expr, [x])
-    va = find_vertical_asymptote(expr, [x], x_range)
+    ha = find_horizontal_asymptote(expr, [x], x_range)
+    va = find_vertical_asymptote(expr, x, x_range)
     domain = np.arange(-x_range, x_range, float(1)/10**ROUNDING)
     domain = domain.round(ROUNDING)
     oa = find_oblique_asymptote(expr)
