@@ -149,4 +149,4 @@ def on_learn_more_button(n, path):
     return f"{path}#learn-more-section"
 
 
-layout = [dcc.Location(id='url'), create_page_content()]
+layout = [dcc.Location(id="url"), create_page_content()]

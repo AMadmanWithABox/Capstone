@@ -3,7 +3,7 @@ from sympy import *
 from dash import html, dcc
 from lib.templates.basic_graph_component import create_basic_graph
 
-dash.register_page(__name__, path='/calculus/limits/epsilon-delta', name='Epsilon-delta limits')
+dash.register_page(__name__, path='/calculus/limits/epsilon-delta', name='Epsilon-delta limits', order=1)
 
 
 def testing():

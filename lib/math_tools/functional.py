@@ -31,76 +31,97 @@ def find_horizontal_asymptote(expr, func_symbols):
     except:
         return list()
 
-def trig_solver(expr, x_range):
+
+# def window_solver(expr, x_range):
+#     solve_set = list()
+#     current = -x_range
+#     if isinstance(expr.args[0], log) or isinstance(expr, log) or (isinstance(expr.args[0], Pow) and (expr.args[0].args[1] < 1)):
+#         current = 0
+#     while current < x_range:
+#         try:
+#             current = nsolve(expr, (current, current + 0.5), solver='bisect', rational=False)
+#             solve_set.append(current)
+#             current += 0.001
+#         except ValueError as e:
+#             current += 1
+#             pass
+#         except TypeError as e:
+#             pass
+#     return solve_set
+
+
+def singularity_finder(expr, x_range):
     solve_set = list()
-    current = -x_range
-    if isinstance(expr.args[0], log):
-        current = 0
-    while current < x_range:
-        try:
-            current = nsolve(expr, (current, current + 1), solver='bisect', rational=False)
-            print(f'Current: {current}')
-            solve_set.append(current)
-            current += 0.001
-        except ValueError as e:
-            print('hit ValueError')
-            current += 1
-            pass
-        except TypeError as e:
-            pass
+    solve_set_unfiltered = singularities(expr, x, Interval(-x_range, x_range, ))
+    print(solve_set_unfiltered)
+    if solve_set_unfiltered is EmptySet:
+        return solve_set
+
+    for s in solve_set_unfiltered:
+        if not s.is_real:
+            continue
+        if nfloat(s) > x_range:
+            break
+        else:
+            solve_set.append(nfloat(s))
+    print(solve_set)
     return solve_set
 
 
 def find_vertical_asymptote(expr, func_symbols, x_range):
-    if isinstance(expr, Number):
-        return list()
-    va = list()
-    numerator = numer(expr)
-    denominator = denom(expr)
-    for s in func_symbols:
-        if not isinstance(denominator, One) and not isinstance(numerator, log):
-            if isinstance(denominator, sin) or isinstance(denominator, cos) or isinstance(denominator, tan):
-                va = trig_solver(denominator, x_range)
-            else:
-                va = list(solve(denominator, s))
-        elif isinstance(expr, tan):
-            inside = expr.args[0]
-            print("in tan VA")
-            print(inside)
-            solve_set = trig_solver(cos(inside), x_range)
-            va = list([round(n, ROUNDING) for n in solve_set])
-        elif isinstance(expr, cot):
-            va = list([round(pi * n, ROUNDING) for n in range(-x_range, x_range)])
-        elif isinstance(expr, sec):
-            va = list([round(pi / 2 + (pi * n), ROUNDING) for n in range(-x_range, x_range)])
-        elif isinstance(expr, csc):
-            va = list([round(pi * n, ROUNDING) for n in range(-x_range, x_range)])
-        elif isinstance(expr, log):
-            try:
-                va = list(solve(expr.args[0], s))
-            except NotImplementedError:
-                pass
-        elif isinstance(numerator, log) and isinstance(denominator, log):
-            va = list(solve(numerator.args[0], s))
-        # elif isinstance(expr, Pow):
-        #     if isinstance(expr.args[0], Symbol):
-        #         if isinstance(expr.args[1], Symbol):
-        #             va = list()
-        #         elif expr.args[1] < 1:
-        #             va = list(solve(expr, s))
-        #     else:
-        #         va = list()
-        elif isinstance(expr, Add):
-            try:
-                va = list(find_vertical_asymptote(n, func_symbols, x_range) for n in expr.args)
-                va = list(flatten(va))
-            except NotImplementedError:
-                args = expr.args
-                for argument in args:
-                    if isinstance(argument, Mul):
-                        argument = argument.args[0] if isinstance(argument.args[0], log) else argument.args[1]
-                    if isinstance(argument, log):
-                        va = list(solve(argument.args[0], s))
+    va = singularity_finder(expr, x_range)
+    # if isinstance(expr, Number):
+    #     return list()
+    # va = list()
+    # args = list(expr.args)
+    # args.append(expr)
+    # for s in func_symbols:
+    #     for argument in args:
+    #         numerator = numer(argument)
+    #         denominator = denom(argument)
+    #         if not isinstance(denominator, One) and not isinstance(numerator, log):
+    #             if isinstance(denominator, sin) or isinstance(denominator, cos) or isinstance(denominator, tan):
+    #                 va = window_solver(denominator, x_range)
+    #             else:
+    #                 va = list(solve(denominator, s))
+    #         elif isinstance(argument, tan):
+    #             inside = argument.args[0]
+    #             solve_set = window_solver(cos(inside), x_range)
+    #             va = list([round(n, ROUNDING) for n in solve_set])
+    #             print(va)
+    #         elif isinstance(argument, log):
+    #             try:
+    #                 print(argument)
+    #                 if isinstance(argument.args[0], Symbol):
+    #                     va = list([0])
+    #                 else:
+    #                     va = list(solve(argument.args[0], s))
+    #                 print(va)
+    #             except NotImplementedError:
+    #                 pass
+    #         elif isinstance(numerator, log) and isinstance(denominator, log):
+    #             va = list(solve(numerator.args[0], s))
+    #         elif isinstance(argument, Pow):
+    #             if isinstance(argument.args[0], Symbol):
+    #                 if isinstance(argument.args[1], Symbol):
+    #                     va = list()
+    #                 elif argument.args[1] < 1:
+    #                     va = list(solve(argument, s))
+    #             elif isinstance(argument.args[0], tan):
+    #                 va = window_solver(argument.args[0], x_range)
+    #             else:
+    #                 va = list()
+    #         elif isinstance(argument, Add):
+    #             try:
+    #                 va = list(find_vertical_asymptote(n, func_symbols, x_range) for n in argument.args)
+    #                 va = list(flatten(va))
+    #             except NotImplementedError:
+    #                 args = argument.args
+    #                 for argument2 in args:
+    #                     if isinstance(argument2, Mul):
+    #                         argument2 = argument2.args[0] if isinstance(argument2.args[0], log) else argument2.args[1]
+    #                     if isinstance(argument2, log):
+    #                         va = list(solve(argument2.args[0], s))
 
     verified_va = list()
     for num in va:

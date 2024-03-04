@@ -8,13 +8,20 @@ from lib.math_tools.functional import *
 from lib.constants import ROUNDING
 
 
-def create_graph(x_range: int, expr_str, x_min=None, x_max=None, y_min=None, y_max=None, title=None):
+def create_graph(x_range: int, expr_str, x_min=None, x_max=None, y_min=None, y_max=None, title=None, is_derivative=False):
+
     warnings.filterwarnings("error")
     fig = go.Figure()
     x = symbols('x', real=True)
     x_not_real = symbols('x')
     expr = sympify(expr_str)
-    print(f'function {expr_str} is {type(expr)}')
+    # deriv = None
+    # if not is_derivative:
+    #     try:
+    #         deriv = create_graph(x_range, diff(expr), x_min, x_max, y_min, y_max, title, True)
+    #     except:
+    #         pass
+    print(f'function {expr_str} is {type(expr)} {expr}')
     f = lambdify(x, expr, modules=['numpy'])
     ha = find_horizontal_asymptote(expr, [x])
     va = find_vertical_asymptote(expr, [x], x_range)
@@ -129,6 +136,9 @@ def create_graph(x_range: int, expr_str, x_min=None, x_max=None, y_min=None, y_m
     if y_min is not None and y_max is not None:
         fig.update_yaxes(range=[y_min, y_max])
     warnings.resetwarnings()
+    # if deriv is not None:
+    #     for data in deriv['data']:
+    #         fig.add_trace(data)
     return fig
 
 
