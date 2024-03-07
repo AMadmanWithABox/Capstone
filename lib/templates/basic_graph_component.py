@@ -107,17 +107,26 @@ def create_graph(x_range: int, expr_str, x_min=None, x_max=None, y_min=None, y_m
     if ha is not None and len(ha) > 0:
         for h in ha:
             # noinspection PyTypeChecker
-            fig.add_trace(
-                go.Scatter(
-                    x=[min(domain), max(domain)],
-                    y=[h, h],
-                    mode='lines',
-                    name="Horizontal Asymptote",
-                    hoveron="fills",
-                    line_dash="dash",
-                    line_color="green"
+            if h is not None and not isinstance(h, complex):
+                name = None
+                showlegend = False
+                if h == ha[0]:
+                    name = "Horizontal Asymptote"
+                    showlegend = True
+                h = float(h)
+                # noinspection PyTypeChecker
+                fig.add_trace(
+                    go.Scatter(
+                        y=[h, h],
+                        x=[min(domain), max(domain)],
+                        mode='lines',
+                        name=name,
+                        hoveron="fills",
+                        showlegend=showlegend,
+                        line_dash="dash",
+                        line_color="green"
+                    )
                 )
-            )
 
     fig.update_traces(mode='lines', hovertemplate=None)
     fig.update_layout(

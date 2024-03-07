@@ -13,14 +13,12 @@ from lib.constants import ROUNDING
 def find_horizontal_asymptote(expr, func_symbols, x_range):
     try:
         inverse_expr = solve(Eq(y, expr), x)
-        print(f'Inverse expression: {inverse_expr}')
         ha = list()
         for expression in inverse_expr:
             try:
                 ha.extend(find_vertical_asymptote(expression, y, x_range))
             except:
                 pass
-        print(f'Horizontal asymptotes: {ha}')
         return ha
     except:
         if isinstance(expr, exp) and isinstance(expr.args[0], Symbol):
@@ -64,15 +62,15 @@ def find_horizontal_asymptote(expr, func_symbols, x_range):
 
 def singularity_finder(expr, func_symbol, x_range):
     solve_set = list()
-    solve_set_unfiltered = singularities(expr, func_symbol, Interval(-x_range, x_range, ))
+    # Singularities are Asymptotes
+    solve_set_unfiltered = singularities(expr, func_symbol, Interval(-x_range, x_range))
     if solve_set_unfiltered is EmptySet:
         return solve_set
 
     for s in solve_set_unfiltered:
         if not s.is_real:
             continue
-        if nfloat(s) > x_range:
-            break
+
         else:
             solve_set.append(nfloat(s))
     return solve_set

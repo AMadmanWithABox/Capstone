@@ -8,23 +8,12 @@ from lib.templates.basic_graph_component import create_basic_graph
 dash.register_page(__name__, path='/calculus/limits', name='Limits', order=2)
 
 expressions = [
-    ["Rational", "1 / x"],
+    ["Simple Rational", "1 / x"],
+    ["Complex Rational", "(x**2 - 9)/(x**2 - 1)"],
     ["Exponential", "exp(x)"],
     ["Logarithm", "log(x, 3)"],
     ["Trigonometric", "tan(x)"],
 ]
-
-
-def testing():
-    x = symbols('x')
-    expr = (x ** 2 + 6 * x + 9) / (x + 3)
-    denominator = denom(expr)
-    print(denominator)
-    solution = solve(denominator, x)
-    for s in solution:
-        print(s.round(2))
-    print(solve(denominator, x))
-
 
 # def create_page():
 #     # testing()
@@ -161,4 +150,4 @@ layout = html.Div([
 def select_graph(value):
     description = ""
 
-    return create_basic_graph(50, value, -10, 10, -10, 10, "Epsilon-delta limits")
+    return create_basic_graph(50, value, -10, 10, -10, 10, "Limits")
