@@ -40,18 +40,18 @@ layout = html.Div([
                                 dmc.ListItem(
                                     [dmc.Anchor("Limits", href="/calculus/limits", underline=False),
                                      ": The value of a function as it approaches an x value."],
-                                    icon=dmc.ThemeIcon(DashIconify(icon="oui:kql-function"))
+                                    icon=dmc.ThemeIcon(DashIconify(icon="oui:kql-function"), variant="light")
                                 ),
                                 dmc.ListItem(
                                     [dmc.Anchor("Derivatives", href="/calculus/derivatives", underline=False),
                                      ": A fundamental tool that measures how sensitive a function's output "
                                      "changes in relation to it's input."],
-                                    icon=dmc.ThemeIcon(DashIconify(icon="mdi:graph-sankey"))
+                                    icon=dmc.ThemeIcon(DashIconify(icon="mdi:graph-sankey"), variant="light")
                                 ),
                                 dmc.ListItem(
                                     [dmc.Anchor("Integration", href="/calculus/integration", underline=False),
                                      ": Another fundamental tool for finding the area under a curve of a function."],
-                                    icon=dmc.ThemeIcon(DashIconify(icon="tabler:math-integral-x"))
+                                    icon=dmc.ThemeIcon(DashIconify(icon="tabler:math-integral-x"), variant="light")
                                 ),
                                 dmc.ListItem(
                                     [dmc.Anchor("Sequences and series",
@@ -59,7 +59,7 @@ layout = html.Div([
                                                 underline=False),
                                      ": A sequence is a list of numbers arranged in a specific "
                                      "pattern, while a series is the sum of a sequence."],
-                                    icon=dmc.ThemeIcon(DashIconify(icon="streamline:steps-number"))
+                                    icon=dmc.ThemeIcon(DashIconify(icon="streamline:steps-number"), variant="light")
                                 ),
                                 dmc.ListItem(
                                     [dmc.Anchor("Multivariable calculus",
@@ -67,7 +67,7 @@ layout = html.Div([
                                                 underline=False),
                                      ": A subset of calculus that studies functions with two or "
                                      "more variables"],
-                                    icon=dmc.ThemeIcon(DashIconify(icon="tabler:math-xy"))
+                                    icon=dmc.ThemeIcon(DashIconify(icon="tabler:math-xy"), variant="light")
                                 )
                             ],
                                 withPadding=True,
