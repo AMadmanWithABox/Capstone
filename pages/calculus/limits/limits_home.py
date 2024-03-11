@@ -124,12 +124,25 @@ expressions = [
 #
 #     graph_list = html.Div(id="graph-list")
 #     return graph_list
+description = dcc.Markdown('''
+Limits are the value a function approaches as $x$ approaches a specific value. 
+If you understand the concept of a value 'approaching' then you understand what a limit is. 
+Let's examine a limit function definition:
+$$
+\\lim_{x\\to \\infty} f(x) = \\frac1x
+$$
+In this function there are a few different parts. 
+$\\lim$ is what tells us we are looking at a Limit function.
+$x\\to \\infty$ defines what $x$ approaches. In this case $x$ is approaching $\\infty$.
+When dealing with limit functions we may also see things like $x\\to 0^{-}$. 
+This means we want the limit as $x$ approaches $0$ from the left, or from $x$ values less than $0$.
+$f(x) = \\frac1x$ describes the function we are looking at.
 
-
+''', mathjax=True)
 layout = html.Div([
     dcc.Location(id='url'),
     html.Div(id="graph-list"),
-    html.Div([
+    dmc.Stack([
         dmc.RadioGroup(
             [dmc.Radio(l, value=v) for l, v in expressions],
             id="radio-group",
@@ -138,7 +151,7 @@ layout = html.Div([
             size="lg",
             mt=10
         ),
-        dmc.Text(id="radio-output")
+        dmc.Text(description, id="radio-output")
     ])
 ])
 
@@ -148,6 +161,4 @@ layout = html.Div([
     Input("radio-group", "value")
 )
 def select_graph(value):
-    description = ""
-
     return create_basic_graph(50, value, -10, 10, -10, 10, "Limits")
