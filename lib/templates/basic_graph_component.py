@@ -39,6 +39,16 @@ def create_graph(x_range: int, expr_str, x_min=None, x_max=None, y_min=None, y_m
                 if round(float(domain[i]), ROUNDING) == round(float(rounded_va[j]), ROUNDING):
                     domain[i] = None
 
+    if ha is not None and len(ha) > 0:
+        rounded_ha = [float(round(h, ROUNDING)) for h in ha]
+        for i in range(len(rounded_ha)):
+            for j in range(len(rounded_ha)):
+                try:
+                    if round(float(rounded_ha[i]), ROUNDING) == round(float(rounded_ha[j]), ROUNDING) and i != j:
+                        rounded_ha.pop(i)
+                except IndexError as e:
+                    continue
+        ha = rounded_ha
     y = list()
     for i in range(len(domain)):
         try:
